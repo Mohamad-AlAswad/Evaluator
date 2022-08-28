@@ -1,7 +1,6 @@
-import json
 from job import Job
+from repository import Container, Repo
 from flask import Flask, request, jsonify
-from flask_restful import Resource, Api, reqparse
 
 import firebase_admin
 from firebase_admin import credentials
@@ -12,23 +11,28 @@ cred = credentials.Certificate('rms-f-ef128-b70f6b7abb1f.json')
 app_firebase = firebase_admin.initialize_app(cred)
 db = firestore.client()
 jobs = {}
-skills = []
-
+data = {}
+all_type_cont = []
 app = Flask('Evaluator')
-api = Api(app)
 
 
-class Skill(Resource):
-    def get(self):
-        word = str(request.args.get('word')).lower()
-        result = []
-        for skill in skills:
-            if word in str(skill).lower():
-                result.append(skill)
-        return result
+@app.route('/api/<type_cont>/<word>', methods=['GET'])
+def get(type_cont, word):
+    if type_cont not in data:
+        return []
+    else:
+        return data.get(type_cont).get(word)
 
 
-api.add_resource(Skill, '/skill')
+@app.route('/api/<type_cont>/<word>', methods=['POST'])
+def post(type_cont, word):
+    if type_cont not in all_type_cont:
+        data[type_cont] = Container(type_cont)
+        all_type_cont.append(type_cont)
+        Repo.write_json_file(all_type_cont, 'type_cont')
+
+    data.get(type_cont).add(word)
+    return jsonify('added successfully'), 201
 
 
 def add_job(doc):
@@ -40,8 +44,9 @@ def delete_job(doc_id):
 
 
 if __name__ == '__main__':
-    with open('skills.json') as f:
-        skills = json.load(f)
+    all_type_cont = Repo.read_json_file('type_cont')
+    for one_type in all_type_cont:
+        data[one_type] = Container(one_type)
 
 
     def on_snapshot(col_snapshot, changes, read_time):
@@ -56,4 +61,4 @@ if __name__ == '__main__':
     # Watch the collection query
     query_watch = col_query.on_snapshot(on_snapshot)
 
-    app.run()
+    app.run(host="192.168.137.223")
