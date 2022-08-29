@@ -1,5 +1,10 @@
 import json
 
+jobs = {}
+users = {}
+data = {}
+all_type_cont = []
+
 
 class Container:
     def __init__(self, file_path):
@@ -46,12 +51,12 @@ class Container:
 
 class Repo:
     @staticmethod
-    def write_json_file(data, file_path):
+    def write_json_file(_data, file_path):
         with open(file_path + '.json', 'w') as f:
-            f.write(json.dumps(data, indent=2))
+            f.write(json.dumps(_data, indent=2))
 
     @staticmethod
     def read_json_file(file_path):
         with open(file_path + '.json', 'r') as f:
-            data = json.load(f)
-        return data
+            _data = json.load(f)
+        return _data
