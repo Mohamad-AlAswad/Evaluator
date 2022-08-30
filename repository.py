@@ -57,6 +57,6 @@ class Repo:
 
     @staticmethod
     def read_json_file(file_path):
-        with open(file_path + '.json', 'r') as f:
+        with open('data_json/' + file_path + '.json', 'r') as f:
             _data = json.load(f)
         return _data

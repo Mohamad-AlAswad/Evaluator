@@ -1,7 +1,7 @@
 from repository import *
-from job import Job
-from user import User
-from evaluator import Evaluator
+from entities.job import Job
+from entities.user import User
+from utils.evaluator import *
 
 
 def get_recommended_jobs_for_user(user_id):
@@ -29,8 +29,14 @@ def post_complement(type_cont, word):
 
 
 def add_job(doc):
-    jobs[doc.id] = Job.from_json(doc.id, doc.to_dict())
-    jobs[doc.id].set_score(Evaluator.full_job_score(jobs[doc.id]))
+    _job = Job.from_json(doc.id, doc.to_dict())
+    _job.set_scores(
+        score_edu=EduQualificationEvaluator.get_full_score(_job.lis_edu),
+        score_exp=ExperienceEvaluator.get_full_score(_job.lis_exp),
+        score_lang=LanguageEvaluator.get_full_score(_job.lis_lang),
+        score_skill=SkillEvaluator.get_full_score(_job.lis_skill)
+    )
+    jobs[doc.id] = _job
 
 
 def delete_job(doc_id):

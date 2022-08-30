@@ -5,7 +5,7 @@ import firebase_admin
 from algo import *
 
 # Use a service account.
-cred = credentials.Certificate('rms-f-ef128-b70f6b7abb1f.json')
+cred = credentials.Certificate('config/rms-f-ef128-b70f6b7abb1f.json')
 app_firebase = firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -19,7 +19,7 @@ def get_recommended(user_id):
 
 @app.route('/api/unavailable/<user_id>', methods=['GET'])
 def get_unavailable(user_id):
-    return []
+    return get_unavailable_jobs_for_user(user_id)
 
 
 @app.route('/api/<type_cont>/<word>', methods=['GET'])
@@ -51,8 +51,22 @@ def listen_users():
                 add_user(change.document)
             elif change.type.name == 'REMOVED':
                 delete_user(change.document.id)
+            elif change.type.name == 'MODIFIED':
+                delete_user(change.document.id)
+                add_user(change.document)
 
     db.collection('user-info').on_snapshot(on_snapshot_user)
+
+
+@app.route('/')
+def debug_route():
+    for user in users:
+        print('user', user)
+
+    for job in jobs:
+        print('job', job)
+
+    return 'see the console!', 200
 
 
 if __name__ == '__main__':
