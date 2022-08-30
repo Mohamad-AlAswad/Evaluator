@@ -27,6 +27,11 @@ def get_comp(type_cont, word):
     return get_complement(type_cont, word)
 
 
+@app.route('/api/<type_cont>', methods=['GET'])
+def get_comp_all(type_cont):
+    return get_complement(type_cont, word='')
+
+
 @app.route('/api/<type_cont>/<word>', methods=['POST'])
 def post_comp(type_cont, word):
     post_complement(type_cont, word)
@@ -60,18 +65,17 @@ def listen_users():
 
 @app.route('/')
 def debug_route():
-    for user in users:
-        print('user', user)
-
-    for job in jobs:
-        print('job', job)
-
+    # for user in users:
+    #     print('user', user)
+    #
+    # for job in jobs:
+    #     print('job', job)
     return 'see the console!', 200
 
 
 if __name__ == '__main__':
     read_keywords()
-    # listen_jobs()
-    # listen_users()
+    listen_jobs()
+    listen_users()
     # app.run(host="192.168.98.250")
     app.run(host="192.168.137.223")

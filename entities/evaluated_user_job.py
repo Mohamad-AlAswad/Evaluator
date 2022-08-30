@@ -15,10 +15,9 @@ class EvaluatedUserJob:
 
     def export_json(self):
         return {
-            'job_id': self.job_id,
             'score': self.score,
             'edu_qualifications': self.edu_qualifications,
             'experiences': self.experiences,
             'languages': self.languages,
-            'skills': self.skills
+            'skills': self.skills,
         }

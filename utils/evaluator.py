@@ -24,8 +24,8 @@ class Evaluator:
             else:
                 self._unavailable.append(evaluated)
 
-        self.recommended = [_job.export_json() for _job in sorted(self._recommended)]
-        self.unavailable = [_job.export_json() for _job in sorted(self._unavailable)]
+        self.recommended = {_job.job_id: _job.export_json() for _job in sorted(self._recommended)}
+        self.unavailable = {_job.job_id: _job.export_json() for _job in sorted(self._unavailable)}
 
     def _evaluate(self, _job: Job, _job_id):
         score = 0
