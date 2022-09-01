@@ -8,7 +8,12 @@ class EvaluatedUserJob:
         self.languages = languages
         self.skills = skills
 
-    def __ge__(self, other):
+    def __le__(self, other):
+        if self.score == other.score:
+            return self.advance_score >= other.advance_score
+        return self.score > other.score
+
+    def __lt__(self, other):
         if self.score == other.score:
             return self.advance_score >= other.advance_score
         return self.score > other.score
@@ -16,7 +21,7 @@ class EvaluatedUserJob:
     def export_json(self):
         return {
             'score': self.score,
-            'edu_qualifications': self.edu_qualifications,
+            'edu-qualifications': self.edu_qualifications,
             'experiences': self.experiences,
             'languages': self.languages,
             'skills': self.skills,

@@ -52,7 +52,7 @@ class Container:
 class Repo:
     @staticmethod
     def write_json_file(_data, file_path):
-        with open(file_path + '.json', 'w') as f:
+        with open('data_json/' + file_path + '.json', 'w') as f:
             f.write(json.dumps(_data, indent=2))
 
     @staticmethod

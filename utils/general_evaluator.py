@@ -13,7 +13,7 @@ class GeneralEvaluator:
         for field in self.job_list:
             _curr = self.find(field.field_data.title)
             self._result.append(_curr)
-            print(field.field_data.title, _curr)
+            # print(field.field_data.title, _curr)
             if _curr:
                 if field.is_required:
                     _score += self._p_req

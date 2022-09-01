@@ -1,5 +1,8 @@
 [
   "skill",
   "language",
-  "degree"
+  "degree",
+  "field-edu",
+  "job-title",
+  "university"
 ]
