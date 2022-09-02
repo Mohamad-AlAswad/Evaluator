@@ -22,9 +22,6 @@ def get_unavailable(user_id):
     return get_unavailable_jobs_for_user(user_id)
 
 
-@app.route('/api/university/<word>', methods=['GET'])
-def get_comp_university(type_cont, word):
-    return get_complement_university(word)
 @app.route('/api/<type_cont>/<word>', methods=['GET'])
 def get_comp(type_cont, word):
     return get_complement(type_cont, word)
@@ -77,7 +74,7 @@ def debug_route():
 
 
 if __name__ == '__main__':
-    # read_keywords()
+    read_keywords()
     # listen_jobs()
     # listen_users()
     # app.run(host="192.168.98.250")

@@ -19,9 +19,6 @@ def get_complement(type_cont, word):
         return data.get(type_cont).get(word)
 
 
-def get_complement_university(word):
-
-
 def post_complement(type_cont, word):
     if type_cont not in all_type_cont:
         data[type_cont] = Container(type_cont)

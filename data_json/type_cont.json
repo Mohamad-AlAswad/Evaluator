@@ -2,7 +2,8 @@
   "skill",
   "language",
   "degree",
-  "field-edu",
+  "field-edu-Bachelor",
+  "field-edu-Master",
   "job-title",
   "university"
 ]
