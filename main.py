@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from firebase_admin import credentials
 from firebase_admin import firestore
 import firebase_admin
@@ -24,7 +24,16 @@ def get_unavailable(user_id):
 
 @app.route('/api/<type_cont>/<word>', methods=['GET'])
 def get_comp(type_cont, word):
-    return get_complement(type_cont, word)
+    exact, limit = False, 100
+    if request.args.get('exact') and request.args.get('exact').lower() == 'true':
+        exact = True
+    if request.args.get('limit') is not None:
+        try:
+            if 1 <= int(request.args.get('limit')) <= 100:
+                limit = int(request.args.get('limit'))
+        except ValueError:
+            limit = 100
+    return get_complement(type_cont, word, limit, exact)
 
 
 @app.route('/api/<type_cont>', methods=['GET'])
@@ -75,8 +84,8 @@ def debug_route():
 
 if __name__ == '__main__':
     read_keywords()
-    # listen_jobs()
-    # listen_users()
+    listen_jobs()
+    listen_users()
     # app.run(host="192.168.98.250")
     app.run(host="192.168.137.223")
     # app.run(host="192.168.12.120")

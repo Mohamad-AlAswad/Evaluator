@@ -12,11 +12,15 @@ def get_unavailable_jobs_for_user(user_id):
     return Evaluator(users.get(user_id)).unavailable
 
 
-def get_complement(type_cont, word):
+def check_exist(type_cont, word):
+    return False
+
+
+def get_complement(type_cont, word, limit, exact):
     if type_cont not in data:
         return []
     else:
-        return data.get(type_cont).get(word)
+        return data.get(type_cont).get(word, limit, exact)
 
 
 def post_complement(type_cont, word):

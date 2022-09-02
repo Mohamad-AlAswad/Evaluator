@@ -22,12 +22,16 @@ class Container:
         else:
             return False
 
-    def get(self, item):
+    def get(self, item, limit, exact):
         result = []
         item = item.lower()
         for _item in self.data:
-            if item in _item.lower():
+            if exact and item == _item.lower():
                 result.append(_item)
+            if not exact and item in _item.lower():
+                result.append(_item)
+            if len(result) == limit:
+                break
         return result
 
     def add(self, item):
