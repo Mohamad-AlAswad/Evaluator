@@ -22,6 +22,15 @@ def get_unavailable(user_id):
     return get_unavailable_jobs_for_user(user_id)
 
 
+@app.route('/api/extract-cv/<user_id>', methods=['POST'])
+def upload_pdf(user_id):
+    save_path = 'C:\\Users\\creat\\PycharmProjects\\Evaluator\\upload_folder\\cv\\' + user_id
+    pdf_file = request.files['file']
+    pdf_file.save(save_path)
+    update_user_info_from_pdf(user_id)
+    return 'ok', 201
+
+
 @app.route('/api/<type_cont>/<word>', methods=['GET'])
 def get_comp(type_cont, word):
     exact, limit = False, 100
@@ -74,11 +83,13 @@ def listen_users():
 
 @app.route('/')
 def debug_route():
+    update_user_info_from_pdf('KNvVSQq2xSUaxUNsEbHCu5VvHWv2')
     # for user in users:
     #     print('user', user)
     #
     # for job in jobs:
     #     print('job', job)
+
     return 'see the console!', 200
 
 
@@ -86,6 +97,8 @@ if __name__ == '__main__':
     read_keywords()
     listen_jobs()
     listen_users()
+
     # app.run(host="192.168.98.250")
+    # app.run(host="192.168.137.1")
     app.run(host="192.168.137.223")
     # app.run(host="192.168.12.120")

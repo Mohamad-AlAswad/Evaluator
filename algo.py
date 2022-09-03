@@ -32,6 +32,50 @@ def post_complement(type_cont, word):
     data.get(type_cont).add(word)
 
 
+def update_user_info_from_pdf(user_id):
+    def unique(duplicated_list):
+        new_list = []
+        for element in duplicated_list:
+            if element not in new_list:
+                new_list.append(element)
+        return new_list
+
+    def merge_dict(dic2, dic1):
+        return dic1.update(dic2)
+
+    def skills_user(skills):
+        return {'skills': unique(skills + users[user_id].skills)}
+
+    def languages_user(languages):
+        return {'languages': languages + users[user_id].languages}
+
+    def emails_user(emails):
+        return {'emails': unique(emails + users[user_id].emails)}
+
+    def phones_user(phones):
+        return {'phones': unique(phones + users[user_id].phones)}
+
+    def experiences_user(experiences):
+        experiences = unique(experiences)
+        old_experiences = [experience.title for experience in users[user_id].experiences]
+        new_experiences = [
+            {'title': experience.title, 'start': experience.start, 'end': experience.end}
+            for experience in users[user_id].experiences
+        ]
+        for experience in experiences:
+            if experience not in old_experiences:
+                new_experiences.append({'title': experience, 'start': None, 'end': None})
+        return {'experiences': new_experiences}
+
+    content = PdfCvReader(user_id)
+    new_info = skills_user(content.extract_type('skill'))
+    merge_dict(languages_user(content.extract_type('language')), new_info)
+    merge_dict(experiences_user(content.extract_type('job-title')), new_info)
+    merge_dict(emails_user(content.extract_emails()), new_info)
+    merge_dict(phones_user(content.extract_phones()), new_info)
+    db.collection('user-info').document(user_id).update(new_info)
+
+
 def add_job(doc):
     _job = Job.from_json(doc.id, doc.to_dict())
     _job.set_scores(

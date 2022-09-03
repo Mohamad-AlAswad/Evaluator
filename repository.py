@@ -1,4 +1,6 @@
 import json
+import PyPDF2
+import re
 
 jobs = {}
 users = {}
@@ -64,3 +66,50 @@ class Repo:
         with open('data_json/' + file_path + '.json', 'r') as f:
             _data = json.load(f)
         return _data
+
+
+class PdfCvReader:
+    def __init__(self, file_path):
+        self.words = PdfCvReader.__read_pdf_file(file_path)
+        self.inp = PdfCvReader.__duplicate_words(self.words)
+
+    def extract_type(self, key):
+        result = []
+        for word in self.inp:
+            if data.get(key).get(word, 1, True):
+                result.append(word)
+        return result
+
+    def extract_emails(self):
+        return re.findall(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+", self.words)
+
+    def extract_phones(self):
+        phones = re.findall(r"\+[-()\s\d]+?(?=\s*[+<])", self.words)
+        return [re.sub("[^0-9]", "", phone) for phone in phones]
+
+    @staticmethod
+    def __read_pdf_file(file_path):
+        result = ''
+        with open('upload_folder/cv/' + file_path + '.pdf', 'rb') as f:
+            pdf_reader = PyPDF2.PdfFileReader(f)
+            for page_number in range(pdf_reader.numPages):
+                page = pdf_reader.getPage(page_number)
+                page = page.extract_text()
+                page = page.lower()
+                page = page.split('\n')
+                for line in page:
+                    result = result + line
+        return result
+
+    @staticmethod
+    def __duplicate_words(words):
+        words = words.split(' ')
+        result = []
+        for i in range(len(words)):
+            for j in range(7):
+                temp = ''
+                for k in range(j):
+                    if i + k < len(words):
+                        temp = temp + ' ' + words[i + k]
+                result.append(temp.strip())
+        return result

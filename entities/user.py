@@ -2,13 +2,15 @@ from fields.fields import *
 
 
 class User:
-    def __init__(self, _id, edu_qualifications, experiences, languages, skills, summary):
+    def __init__(self, _id, edu_qualifications, experiences, languages, skills, summary, emails, phones):
         self.edu_qualifications = edu_qualifications
         self.experiences = experiences
         self.languages = languages
         self.skills = skills
         self.summary = summary
         self.id = _id
+        self.emails = emails
+        self.phones = phones
 
     def find_skill(self, skill):
         return skill in self.skills
@@ -30,5 +32,7 @@ class User:
             [Experience.from_json_user(_data) for _data in data['experiences']],
             data['languages'],
             data['skills'],
-            data['summary']
+            data['summary'],
+            data['emails'],
+            data['phones']
         )
