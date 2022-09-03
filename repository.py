@@ -1,58 +1,50 @@
+import datetime
 import json
+import time
+
 import PyPDF2
 import re
+from utils.trie import Trie
+import threading
 
 jobs = {}
+lazy_jobs = {}
+lazy_jobs_delete = {}
 users = {}
 data = {}
 all_type_cont = []
+last_time = time.ctime()
 
 
 class Container:
     def __init__(self, file_path):
-        _temp = Repo.read_json_file(file_path)
-        self.data = []
-        for item in _temp:
-            self._add(item)
         self.file_path = file_path
+        self.trie = Trie()
+        _temp = Repo.read_json_file(file_path)
+        for item in _temp:
+            self.__add(item)
 
     def remove(self, item):
-        if item in self.data:
-            self.data.remove(item)
-            Repo.write_json_file(self.get_all(), self.file_path)
-            return True
-        else:
-            return False
+        self.trie.remove(item)
+        Repo.write_json_file(self.get_all(), self.file_path)
 
     def get(self, item, limit, exact):
-        result = []
-        item = item.lower()
-        for _item in self.data:
-            if exact and item == _item.lower():
-                result.append(_item)
-            if not exact and item in _item.lower():
-                result.append(_item)
-            if len(result) == limit:
-                break
-        return result
+        result = self.trie.query(item, exact)
+        if len(result) < limit:
+            limit = len(result)
+        return result[0:limit]
 
     def add(self, item):
-        if self._add(item):
-            self.data = sorted(self.data)
+        old_len = len(self.trie.all)
+        self.trie.insert(item)
+        if old_len != len(self.trie.all):
             Repo.write_json_file(self.get_all(), self.file_path)
-            return True
-        else:
-            return False
+
+    def __add(self, item):
+        self.trie.insert(item)
 
     def get_all(self):
-        return self.data
-
-    def _add(self, item):
-        if item not in self.data:
-            self.data.append(item)
-            return True
-        else:
-            return False
+        return self.trie.all
 
 
 class Repo:

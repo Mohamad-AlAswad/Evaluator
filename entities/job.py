@@ -1,4 +1,5 @@
 from fields.fields import *
+import time
 
 
 class Job:
@@ -7,6 +8,7 @@ class Job:
         self.id, self.summary = _id, summary
         self.lis_edu, self.lis_skill = lis_edu, lis_skill
         self.lis_lang, self.lis_exp = lis_lang, lis_exp
+        self.last_time = time.ctime()
 
     def set_scores(self, score_edu, score_skill, score_lang, score_exp):
         self.score_edu = score_edu

@@ -4,12 +4,11 @@ from firebase_admin import firestore
 import firebase_admin
 from algo import *
 
-# Use a service account.
 cred = credentials.Certificate('config/rms-f-ef128-b70f6b7abb1f.json')
 app_firebase = firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-app = Flask('Evaluator')
+app = Flask('JOP-APIs')
 
 
 @app.route('/api/recommended/<user_id>', methods=['GET'])
@@ -83,13 +82,6 @@ def listen_users():
 
 @app.route('/')
 def debug_route():
-    update_user_info_from_pdf('KNvVSQq2xSUaxUNsEbHCu5VvHWv2')
-    # for user in users:
-    #     print('user', user)
-    #
-    # for job in jobs:
-    #     print('job', job)
-
     return 'see the console!', 200
 
 

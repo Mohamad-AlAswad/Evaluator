@@ -1,6 +1,6 @@
-from datetime import date
+import time
 from entities.job import Job
-from repository import jobs
+from repository import jobs, lazy_jobs
 from entities.evaluated_user_job import EvaluatedUserJob
 from utils.skill_evaluator import SkillEvaluator
 from utils.language_evaluator import LanguageEvaluator
@@ -11,19 +11,30 @@ from utils.edu_qualification_evaluator import EduQualificationEvaluator
 class Evaluator:
     def __init__(self, user):
         self.user = user
-        self.last_time = date.today()
+        self.last_time = None
+        self.recommended = {}
+        self.unavailable = {}
         self._recommended = []
         self._unavailable = []
-        self._build()
+        self.build()
 
-    def _build(self):
-        for _job in jobs.keys():
+    def build(self):
+        def update(_job):
             evaluated, available = self._evaluate(jobs.get(_job), _job)
             if available:
                 self._recommended.append(evaluated)
             else:
                 self._unavailable.append(evaluated)
 
+        keys = lazy_jobs.keys()
+        if self.last_time is None:
+            keys = jobs.keys()
+
+        for _job in keys:
+            update(_job)
+            # if (self.last_time is None) or (self.last_time < jobs[_job].last_time):
+
+        self.last_time = time.ctime()
         self.recommended = {_job.job_id: _job.export_json() for _job in sorted(self._recommended)}
         self.unavailable = {_job.job_id: _job.export_json() for _job in sorted(self._unavailable)}
 
