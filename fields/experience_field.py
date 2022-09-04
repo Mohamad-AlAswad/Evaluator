@@ -13,6 +13,8 @@ class Experience:
 
     @staticmethod
     def from_json_user(_data):
+        if _data is None:
+            return None
         period = None
         if _data['start'] is not None and _data['end'] is not None:
             period = (_data['end'].year - _data['start'].year) + (_data['end'].month - _data['start'].month) / 12

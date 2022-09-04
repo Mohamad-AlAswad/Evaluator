@@ -26,6 +26,8 @@ class User:
 
     @staticmethod
     def from_json(_id, data):
+        data['edu-qualifications'] = [] if data['edu-qualifications'] is None else data['edu-qualifications']
+        data['experiences'] = [] if data['experiences'] is None else data['experiences']
         return User(
             _id,
             [EduQualification.from_json(_data) for _data in data['edu-qualifications']],

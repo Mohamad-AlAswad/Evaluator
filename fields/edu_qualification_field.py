@@ -4,6 +4,8 @@ class EduQualification:
 
     @staticmethod
     def from_json(_data):
+        if _data is None:
+            return None
         return EduQualification(
             _data['degree'],
             _data['field'],
