@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, request
+import os
+from flask import Flask, jsonify, request, send_file
 from firebase_admin import credentials
 import firebase_admin
 from firebase_admin import firestore
@@ -74,7 +75,7 @@ def get_comp(type_cont, word):
     return get_complement(type_cont, word, limit, exact)
 
 
-@app.route('/api/<type_cont>', methods=['GET'])
+@app.route('/api/<type_cont>/', methods=['GET'])
 def get_comp_all(type_cont):
     return get_complement(type_cont, word='')
 
@@ -116,9 +117,9 @@ def debug_route():
 
 
 if __name__ == '__main__':
-    read_keywords()
     listen_jobs()
     listen_users()
+    read_keywords()
 
     # app.run(host="192.168.98.250")
     # app.run(host="192.168.137.1")

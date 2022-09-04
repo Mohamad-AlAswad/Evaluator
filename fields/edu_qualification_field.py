@@ -10,11 +10,3 @@ class EduQualification:
             _data['degree'],
             _data['field'],
         )
-
-    # def __eq__(self, other):
-    #     if isinstance(other, EduQualification):
-    #         return self.degree == other.degree and self.field == other.field
-    #     return False
-    #
-    # def __hash__(self):
-    #     return hash([self.degree, self.field])

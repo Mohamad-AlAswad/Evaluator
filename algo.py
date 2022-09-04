@@ -98,4 +98,5 @@ def delete_user(doc_id):
 def read_keywords():
     all_type_cont = Repo.read_json_file('type_cont')
     for one_type in all_type_cont:
+        print(one_type)
         data[one_type] = Container(one_type)

@@ -5,12 +5,6 @@ class Experience:
         self.start = start
         self.end = end
 
-    # def similarity(self, other):
-    #     if self.period < other.period:
-    #         return 0
-    #     else:
-    #         return self.period - other.period
-
     @staticmethod
     def from_json_user(_data):
         if _data is None:
@@ -33,11 +27,3 @@ class Experience:
             None,
             None
         )
-
-    # def __eq__(self, other):
-    #     if isinstance(other, Experience):
-    #         return self.title == other.title and self.period >= other.period
-    #     return False
-    #
-    # def __hash__(self):
-    #     return hash([self.period, self.title])
