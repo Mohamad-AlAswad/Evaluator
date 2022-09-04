@@ -12,10 +12,6 @@ def get_unavailable_jobs_for_user(user_id):
     return Evaluator(users.get(user_id)).unavailable
 
 
-def check_exist(type_cont, word):
-    return False
-
-
 def get_complement(type_cont, word, limit, exact):
     if type_cont not in data:
         return []
@@ -32,7 +28,7 @@ def post_complement(type_cont, word):
     data.get(type_cont).add(word)
 
 
-def update_user_info_from_pdf(user_id):
+def get_merged_user_info_from_pdf(user_id):
     def unique(duplicated_list):
         new_list = []
         for element in duplicated_list:
@@ -73,7 +69,7 @@ def update_user_info_from_pdf(user_id):
     merge_dict(experiences_user(content.extract_type('job-title')), new_info)
     merge_dict(emails_user(content.extract_emails()), new_info)
     merge_dict(phones_user(content.extract_phones()), new_info)
-    db.collection('user-info').document(user_id).update(new_info)
+    return new_info
 
 
 def add_job(doc):

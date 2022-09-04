@@ -69,6 +69,6 @@ class Trie(object):
             if char in node.children:
                 node = node.children[char]
             else:
-                return result
+                return result.all
         self.dfs_trie(node, exact, result)
         return result.all

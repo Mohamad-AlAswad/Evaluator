@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from firebase_admin import credentials
-from firebase_admin import firestore
 import firebase_admin
+from firebase_admin import firestore
 from algo import *
 
 cred = credentials.Certificate('config/rms-f-ef128-b70f6b7abb1f.json')
@@ -9,6 +9,33 @@ app_firebase = firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 app = Flask('JOP-APIs')
+
+
+@app.route('/api/rate-job-app/<job_id>/<rating>', methods=['GET'])
+def update_job_app_rat(job_id, rating):
+    rating = float(rating)
+    if 0 <= rating <= 5:
+        job_app_doc = db.collection('jobs-applications').document(job_id).get().to_dict()
+        job_seeker_id = job_app_doc['job-seeker-id']
+        job_seeker_doc = db.collection('user-info').document(job_seeker_id).get().to_dict()
+        old = job_app_doc['rating']
+        old = float(old)
+        delta = rating - old
+        counter = float(job_seeker_doc['--rating-counter'])
+        old_rating = float(job_seeker_doc['rating']) * counter + delta
+        if old != 0:
+            counter -= 1
+        if rating != 0:
+            counter += 1
+        if counter > 0:
+            new_rating = old_rating / counter
+        else:
+            new_rating = 0
+        db.collection('jobs-applications').document(job_id).update({'rating': rating})
+        db.collection('user-info').document(job_seeker_id).update({'rating': new_rating, '--rating-counter': counter})
+        return 'ok', 201
+    else:
+        return 'invalid rating', 400
 
 
 @app.route('/api/recommended/<user_id>', methods=['GET'])
@@ -23,10 +50,13 @@ def get_unavailable(user_id):
 
 @app.route('/api/extract-cv/<user_id>', methods=['POST'])
 def upload_pdf(user_id):
-    save_path = 'C:\\Users\\creat\\PycharmProjects\\Evaluator\\upload_folder\\cv\\' + user_id
+    save_path = 'upload_folder\\cv\\' + user_id + '.pdf'
     pdf_file = request.files['file']
+    print(pdf_file.name)
     pdf_file.save(save_path)
-    update_user_info_from_pdf(user_id)
+    new_info = get_merged_user_info_from_pdf(user_id)
+    print(new_info)
+    db.collection('user-info').document(user_id).update(new_info)
     return 'ok', 201
 
 

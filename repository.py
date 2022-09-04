@@ -1,7 +1,6 @@
 import datetime
 import json
 import time
-
 import PyPDF2
 import re
 from utils.trie import Trie
