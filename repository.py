@@ -28,7 +28,7 @@ class Container:
         Repo.write_json_file(self.get_all(), self.file_path)
 
     def get(self, item, limit, exact):
-        result = self.trie.query(item, exact)
+        result = self.trie.query(item, exact, limit)
         if len(result) < limit:
             limit = len(result)
         return result[0:limit]

@@ -46,17 +46,24 @@ class Trie(object):
         for i in range(len(word)):
             self.dfs_path(word[i:], word, False, delta)
 
-    def dfs_trie(self, node, exact, result):
-        if exact:
-            for word in node.full_words.keys():
-                result.insert(word)
-        else:
-            for word in node.sub_words.keys():
-                result.insert(word)
-            for child in node.children.values():
-                self.dfs_trie(child, exact, result)
+    def dfs_trie(self, node, exact, limit, result):
+        if len(result.all) < limit:
+            if exact:
+                for word in node.full_words.keys():
+                    if len(result.all) < limit:
+                        result.insert(word)
+                    else:
+                        break
+            else:
+                for word in node.sub_words.keys():
+                    if len(result.all) < limit:
+                        result.insert(word)
+                    else:
+                        break
+                for child in node.children.values():
+                    self.dfs_trie(child, exact, limit, result)
 
-    def query(self, word, exact):
+    def query(self, word, exact, limit):
         result = Trie()
         node = self.root
         for char in word:
@@ -65,5 +72,5 @@ class Trie(object):
                 node = node.children[char]
             else:
                 return result.all
-        self.dfs_trie(node, exact, result)
+        self.dfs_trie(node, exact, limit, result)
         return result.all
