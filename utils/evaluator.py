@@ -1,6 +1,6 @@
 import time
 from entities.job import Job
-from repository import jobs, lazy_jobs
+from repository import jobs, lazy_jobs, applications
 from entities.evaluated_user_job import EvaluatedUserJob
 from utils.skill_evaluator import SkillEvaluator
 from utils.language_evaluator import LanguageEvaluator
@@ -30,8 +30,12 @@ class Evaluator:
         if self.last_time is None:
             keys = jobs.keys()
 
+        apps = applications.get(self.user.id)
+        if apps is None:
+            apps = []
         for _job in keys:
-            update(_job)
+            if _job not in apps:
+                update(_job)
             # if (self.last_time is None) or (self.last_time < jobs[_job].last_time):
 
         self.last_time = time.ctime()

@@ -11,6 +11,7 @@ lazy_jobs = {}
 lazy_jobs_delete = {}
 users = {}
 data = {}
+applications = {}
 all_type_cont = []
 last_time = time.ctime()
 

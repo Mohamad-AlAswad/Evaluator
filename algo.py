@@ -1,3 +1,5 @@
+from pyasn1_modules.rfc6031 import at_pskc_keyProfileId
+
 from repository import *
 from entities.job import Job
 from entities.user import User
@@ -93,6 +95,16 @@ def add_user(doc):
 
 def delete_user(doc_id):
     users.pop(doc_id)
+
+
+def delete_applications(doc_id):
+    applications.pop(doc_id)
+    print(applications)
+
+
+def add_applications(doc):
+    applications[doc.id] = doc.to_dict()['list']
+    print(applications)
 
 
 def read_keywords():

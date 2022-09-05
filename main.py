@@ -109,6 +109,7 @@ def listen_jobs():
 def listen_users():
     def on_snapshot_user(col_snapshot, changes, read_time):
         for change in changes:
+            print(change.type, change.document.to_dict())
             if change.type.name == 'ADDED':
                 add_user(change.document)
             elif change.type.name == 'REMOVED':
@@ -120,6 +121,21 @@ def listen_users():
     db.collection('user-info').on_snapshot(on_snapshot_user)
 
 
+def listen_applications():
+    def on_snapshot_user(col_snapshot, changes, read_time):
+        for change in changes:
+            # print(change.type, change.document.to_dict()['list'])
+            if change.type.name == 'ADDED':
+                add_applications(change.document)
+            elif change.type.name == 'REMOVED':
+                delete_applications(change.document.id)
+            elif change.type.name == 'MODIFIED':
+                delete_applications(change.document.id)
+                add_applications(change.document)
+
+    db.collection('user-applications').on_snapshot(on_snapshot_user)
+
+
 @app.route('/')
 def debug_route():
     return 'see the console!', 200
@@ -129,5 +145,7 @@ if __name__ == '__main__':
     listen_jobs()
     listen_users()
     read_keywords()
+    listen_applications()
 
-    app.run()
+    app.run(host="192.168.137.223")
+    # app.run(host="192.168.102.208")
