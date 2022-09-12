@@ -12,33 +12,6 @@ db = firestore.client()
 app = Flask('JOP-APIs')
 
 
-@app.route('/api/rate-job-app/<job_id>/<rating>', methods=['GET'])
-def update_job_app_rat(job_id, rating):
-    rating = float(rating)
-    if 0 <= rating <= 5:
-        job_app_doc = db.collection('jobs-applications').document(job_id).get().to_dict()
-        job_seeker_id = job_app_doc['job-seeker-id']
-        job_seeker_doc = db.collection('user-info').document(job_seeker_id).get().to_dict()
-        old = job_app_doc['rating']
-        old = float(old)
-        delta = rating - old
-        counter = float(job_seeker_doc['--rating-counter'])
-        old_rating = float(job_seeker_doc['rating']) * counter + delta
-        if old != 0:
-            counter -= 1
-        if rating != 0:
-            counter += 1
-        if counter > 0:
-            new_rating = old_rating / counter
-        else:
-            new_rating = 0
-        db.collection('jobs-applications').document(job_id).update({'rating': rating})
-        db.collection('user-info').document(job_seeker_id).update({'rating': new_rating, '--rating-counter': counter})
-        return 'ok', 201
-    else:
-        return 'invalid rating', 400
-
-
 @app.route('/api/recommended/<user_id>', methods=['GET'])
 def get_recommended(user_id):
     return get_recommended_jobs_for_user(user_id)
@@ -138,7 +111,9 @@ def listen_applications():
 
 @app.route('/')
 def debug_route():
-    return 'see the console!', 200
+    return send_file(os.getcwd() + '/upload_folder/cv/1.pdf')
+    # return send_file(os.getcwd() + '/upload_folder/2.jpg')
+    # return 'see the console!', 200
 
 
 if __name__ == '__main__':
@@ -147,5 +122,7 @@ if __name__ == '__main__':
     read_keywords()
     listen_applications()
 
+    # app.run(host="192.168.97.229")
     app.run(host="192.168.137.223")
+    # app.run(host="192.168.25.250")
     # app.run(host="192.168.102.208")
