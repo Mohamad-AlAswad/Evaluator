@@ -1,8 +1,10 @@
 import os
-from flask import Flask, jsonify, request, send_file
-from firebase_admin import credentials
+
 import firebase_admin
+from firebase_admin import credentials
 from firebase_admin import firestore
+from flask import Flask, jsonify, request, send_file
+
 from algo import *
 
 cred = credentials.Certificate('config/rms-f-ef128-b70f6b7abb1f.json')
@@ -111,8 +113,9 @@ def listen_applications():
 
 @app.route('/')
 def debug_route():
-    return send_file(os.getcwd() + '/upload_folder/cv/1.pdf')
-    # return send_file(os.getcwd() + '/upload_folder/2.jpg')
+    # return send_file(os.getcwd() + '/upload_folder/cv/1.pdf')
+    # return send_file(os.getcwd() + '/upload_folder/img.png')
+    return send_file(os.getcwd() + '/upload_folder/2.jpg')
     # return 'see the console!', 200
 
 
@@ -123,6 +126,7 @@ if __name__ == '__main__':
     listen_applications()
 
     # app.run(host="192.168.97.229")
-    app.run(host="192.168.137.223")
+    # app.run(host="192.168.85.154")
+    # app.run(host="192.168.137.223")
     # app.run(host="192.168.25.250")
     # app.run(host="192.168.102.208")
