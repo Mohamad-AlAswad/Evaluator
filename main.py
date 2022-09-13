@@ -1,9 +1,7 @@
-import os
-
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request
 
 from algo import *
 
@@ -113,10 +111,7 @@ def listen_applications():
 
 @app.route('/')
 def debug_route():
-    # return send_file(os.getcwd() + '/upload_folder/cv/1.pdf')
-    # return send_file(os.getcwd() + '/upload_folder/img.png')
-    return send_file(os.getcwd() + '/upload_folder/2.jpg')
-    # return 'see the console!', 200
+    return 'see the console!', 200
 
 
 if __name__ == '__main__':
